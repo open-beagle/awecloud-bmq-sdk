@@ -1,0 +1,128 @@
+// Copyright 2015 gRPC authors.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
+syntax = "proto3";
+
+option go_package = "github.com/open-beagle/awecloud-bmq-sdk/pkg";
+
+// Interface exported by the server.
+service Registry {
+  // Login 登录服务.
+  //
+  // 输入ID与Secret，匹配后返回集群链接信息与密钥.
+  rpc Login(LoginRequest) returns (LoginResponse) {}
+
+  // Listen .
+  //
+  // 持续侦听，接收服务器传来的动作.
+  rpc Listen(ListenRequest) returns (stream ListenResponse) {}
+
+  // GetServices .
+  //
+  // 获取服务端的服务列表
+  rpc GetServices(GetServicesRequest) returns (GetServicesResponse) {}
+}
+
+// LoginRequest 集群信息
+message LoginRequest {
+  // ID, 客户端集群ID，aliyun
+  string ID = 1;
+
+  // Secret, 客户端集群的密钥, Bp#q3sM6uxK4
+  string Secret = 2;
+}
+
+// LoginResponse 集群信息
+message LoginResponse {
+  // Path, 集群的URL的访问路径, 
+  // 其默认值， /awecloud/cluster/access
+  string Path = 1;
+
+  // Secret, 集群的密钥, Bp#q3sM6uxK4
+  string Secret = 2;
+}
+
+// ListenRequest 集群信息
+message ListenRequest {
+  // ID, 客户端集群ID，aliyun
+  string ID = 1;
+}
+
+// ListenResponse ， 服务信息
+message ListenResponse {
+  // Action , 服务动作 ， 
+  Action Action = 1;
+
+  // Data , 服务数据 ， 如Json
+  string Data = 2;  
+}
+
+enum Action {
+  // 获取服务列表
+  GetServices = 0;
+  // 退出当前程序
+  Exits = 1;
+}
+
+// GetServicesRequest 集群信息
+message GetServicesRequest {
+  // ID, 客户端集群ID，aliyun
+  string ID = 1;
+}
+
+// GetServicesResponse ， 服务信息
+message GetServicesResponse {
+  // AgentServices , 服务转发列表
+  repeated ServiceConfig AgentServices = 1;
+
+  // VisitorServices , 服务代理列表
+  repeated ServiceConfig VisitorServices = 2;
+}
+
+// ServiceConfig ， 服务配置
+message ServiceConfig {
+
+  // 服务地址
+  string Server_Address = 1;
+
+  // 服务端口
+  string Server_Port = 2;
+
+  // User , 租户 ，每个Secret服务都在租户下面进行管理与隔离
+  string User = 3;
+
+  // Token , Server服务的密钥
+  string Token = 4;
+
+  // Services , 服务集合 
+  map<string, SecretService> Services = 5;
+}
+
+// SecretService ， 服务
+message SecretService {
+  // Type , 服务类型 ， 默认，stcp
+  string Type = 1;
+
+  // User , 服务名称 ， 如 k8s
+  string Name = 2;
+
+  // Secret , 服务类型 ， 如 stcp
+  string Secret = 3;  
+
+  // Host , 服务主机 ， 如 kubernetes.default
+  string Host = 4;
+
+  // Port , 服务端口 ， 如 6443
+  int32 Port = 5;
+}

@@ -32,6 +32,6 @@ err := c.cc.Invoke(ctx, "/awecloud/bmq/registry/Login", in, out, opts...)
 ## tag
 
 ```bash
-git tag v0.1.0 -f
-git push origin v0.1.0 -f
+git tag v0.1.1 -f
+git push origin v0.1.1 -f
 ```

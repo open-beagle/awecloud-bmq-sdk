@@ -219,5 +219,5 @@ var Registry_ServiceDesc = grpc.ServiceDesc{
 			ServerStreams: true,
 		},
 	},
-	Metadata: "pkg/awecloud/bmq/registry.proto",
+	Metadata: "pkg/registry.proto",
 }

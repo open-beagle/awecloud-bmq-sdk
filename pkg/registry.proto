@@ -57,6 +57,22 @@ message LoginResponse {
 message ListenRequest {
   // ID, 客户端集群ID，aliyun
   string ID = 1;
+
+  // Kind , 服务类型 ， 默认，K8S 
+  // 其他可选值，Containerd，Terminal，GUI
+  Kind Kind = 2;
+
+  // OS , 操作系统 ， 如 Linux ， Windows
+  string OS = 3;
+
+  // Arch , CPU架构 ， 如 amd64 ， arm64
+  string Arch = 4;  
+
+  // Kernel , 内核版本 ， 如 5.4
+  string Kernel = 5;
+
+  // Labels , 其他标记
+  map<string,string> Labels = 6;
 }
 
 // ListenResponse ， 服务信息
@@ -125,4 +141,15 @@ message SecretService {
 
   // Port , 服务端口 ， 如 6443
   int32 Port = 5;
+}
+
+enum Kind {
+  // 程序在K8S中运行
+  K8S = 0;
+  // 程序在容器中运行
+  Containerd = 1;
+  // 程序在命令行中运行
+  Terminal = 2;
+  // 程序是桌面客户端
+  GUI = 3;
 }
